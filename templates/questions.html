@@ -4,6 +4,10 @@
 {% block content %}
 <h1>{{title}}</h1>
 <form action="/answer" method="post">
+    {% for msg in get_flashed_messages() %}
+    <p>{{ msg }}</p>
+    {% endfor %}
+
     <p>{{question}}</p>
     <div>
     {% for choice in choices %}

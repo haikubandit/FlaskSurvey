@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, flash
 from flask_debugtoolbar import DebugToolbarExtension
 
 from surveys import satisfaction_survey
@@ -23,6 +23,7 @@ def get_questions(question_id):
     print(question_id)
     current_question = len(responses)
     if question_id != len(responses):
+        flash("That was an invalid question!")
         return redirect(f"/questions/{current_question}")
     elif current_question == len(satisfaction_survey.questions):
         return redirect('/complete')
