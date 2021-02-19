@@ -14,24 +14,38 @@ responses = []
 @app.route("/")
 def home_page():
     """Show survey title and instructions."""
-
     return render_template("home.html",title=satisfaction_survey.title,
      instructions=satisfaction_survey.instructions,
      questions=satisfaction_survey.questions)
 
 @app.route("/questions/<int:question_id>")
 def get_questions(question_id):
-
-    question_count = len(satisfaction_survey.questions)
-    question = satisfaction_survey.questions[question_id].question
-    # question_idx = satisfaction_survey.questions.question)
-    choices = satisfaction_survey.questions[question_id].choices
+    print(question_id)
+    current_question = len(responses)
+    if question_id != len(responses):
+        return redirect(f"/questions/{current_question}")
+    elif current_question == len(satisfaction_survey.questions):
+        return redirect('/complete')
     
+    question = satisfaction_survey.questions[question_id].question
+    choices = satisfaction_survey.questions[question_id].choices
+
     return render_template("questions.html",title=satisfaction_survey.title,
      instructions=satisfaction_survey.instructions,
-     question=question,choices=choices, count=question_count)
+     question=question,choices=choices)
 
 @app.route("/answer", methods=["POST"])
 def answers():
-    option = request.form['options']
-    return redirect('/questions')
+    choice = request.form['choice']
+    responses.append(choice)
+    next = len(responses)
+
+    if next < len(satisfaction_survey.questions):
+        return redirect(f"/questions/{next}")
+    else:
+        return render_template("complete.html",title=satisfaction_survey.title)
+
+@app.route("/complete")
+def complete():
+    
+    return render_template("complete.html",title=satisfaction_survey.title)
