@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, flash
+from flask import Flask, request, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 
 from surveys import satisfaction_survey
@@ -8,7 +8,7 @@ app.config['SECRET_KEY'] = "super-secret-key"
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 debug = DebugToolbarExtension(app)
 
-responses = []
+# responses = []
 
 
 @app.route("/")
@@ -18,11 +18,18 @@ def home_page():
      instructions=satisfaction_survey.instructions,
      questions=satisfaction_survey.questions)
 
+@app.route("/start-survey", methods=["POST"])
+def start_survey():
+    """Create response session and redirect to first session."""
+    session["responses"] = []
+    return redirect('/questions/0')
+
 @app.route("/questions/<int:question_id>")
 def get_questions(question_id):
-    print(question_id)
-    current_question = len(responses)
-    if question_id != len(responses):
+    """Show next question in survey."""
+    
+    current_question = len(session["responses"])
+    if question_id != len(session["responses"]):
         flash("That was an invalid question!")
         return redirect(f"/questions/{current_question}")
     elif current_question == len(satisfaction_survey.questions):
@@ -38,8 +45,11 @@ def get_questions(question_id):
 @app.route("/answer", methods=["POST"])
 def answers():
     choice = request.form['choice']
+
+    responses = session["responses"]
     responses.append(choice)
-    next = len(responses)
+    session["responses"] = responses
+    next = len(session["responses"])
 
     if next < len(satisfaction_survey.questions):
         return redirect(f"/questions/{next}")
