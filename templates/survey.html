@@ -1,10 +1,11 @@
-<!-- {% extends 'base.html'  %}
+{% extends 'base.html'  %}
 {% block title %}Survey{% endblock %}
 
 {% block content %}
-    <h1>{{title}}</h1>
-    <h3>{{instructions}}</h3>
+    <h1>{{survey.title}}</h1>
+    <h3>{{survey.instructions}}</h3>
     <form action="/start-survey" method="POST">
+        <input type="hidden" name="survey" value="{{survey}}">
         <input type="submit" value="Start Survey">
     </form>
-{% endblock %} -->
+{% endblock %}

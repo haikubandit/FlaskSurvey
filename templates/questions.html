@@ -16,6 +16,12 @@
       <label for="{{choice}}">{{choice}}</label>
     {%  endfor %}
     </div>
+    {% if allow_text %}
+      <div>
+        <label for="comment">Add comment:</label></br>
+        <textarea name="comment" cols="40" rows="5"></textarea>
+      </div>
+    {% endif %}
     <div>
       <button type="submit">Next Question</button>
     </div>
