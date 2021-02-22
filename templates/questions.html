@@ -9,6 +9,7 @@
     {% endfor %}
 
     <p>{{question}}</p>
+    <input type="hidden" name="question" value="{{question}}">
     <div>
     {% for choice in choices %}
       <input type="radio" id="{{choice}}"

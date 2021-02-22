@@ -52,21 +52,22 @@ def get_questions(question_id):
 def answers():
     current_survey = surveys[session["survey"]]
 
+    question = request.form['question']
     choice = request.form['choice']
-    comment = request.form['comment']
+    
+    comment = request.form.get('comment', False)
 
     responses = session["responses"]
-    responses.append((choice, comment))
+    responses.append({"question": question, "choice": choice, "comment": comment})
     session["responses"] = responses
     next = len(session["responses"])
-
     if next < len(current_survey.questions):
         return redirect(f"/questions/{next}")
     else:
-        return render_template("complete.html",title=current_survey.title)
+        return render_template("complete.html",title=current_survey.title,
+         responses=responses)
 
 @app.route("/complete")
 def complete():
     current_survey = surveys[session["survey"]]
-    
     return render_template("complete.html",title=current_survey.title)

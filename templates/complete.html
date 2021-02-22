@@ -4,4 +4,14 @@
 {% block content %}
     <h1>{{title}}</h1>
     <h3>Thank You!</h3>
+
+    {% for response in responses %}
+        {% for key, value in response.items() %}
+            {% if key == "question" %}
+                <p><b>{{value}}:</b> </p>
+                {% elif key == "choice" %}
+                <p>Choice: {{value}}</p>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
 {% endblock %}
